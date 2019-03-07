@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: demo
+
+eureka:
+  instance:
+    instance-id: ${spring.cloud.client.ip-address}:${server.port:8080}
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://eureka:8080/eureka/}
+    registry-fetch-interval-seconds: 5
+
+
