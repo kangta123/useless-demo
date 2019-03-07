@@ -23,6 +23,7 @@ import javax.naming.ServiceUnavailableException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -39,16 +40,19 @@ public class DemoApplication {
     }
 
     @GetMapping("/hello")
-    public String hello() {
+    public String hello(@RequestParam(required = false) Integer time) {
         log.info("Call api hello");
-        int timeout = random.nextInt(1000);
+        if (Objects.isNull(time)) {
+            time = 1000;
+        }
+        int timeout = random.nextInt(time);
         try {
             TimeUnit.MILLISECONDS.sleep(timeout);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         if (timeout > 900) {
-                throw new RuntimeException("测试错误情况, timeout=" + timeout);
+            throw new RuntimeException("测试错误情况, timeout=" + timeout);
         }
 
         return "service processing time:" + timeout;
@@ -64,9 +68,7 @@ public class DemoApplication {
 
         @ExceptionHandler(value = Exception.class)
         public ResponseEntity <Object> handleException(HttpServletRequest request, Exception e) {
-
             return createResponseEntity(500, request.getRequestURI(), e.getMessage());
-
         }
 
         private ResponseEntity <Object> createResponseEntity(int httpStatus, String requestUri, String message) {
