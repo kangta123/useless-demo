@@ -1,87 +1,54 @@
 package com.example.demo;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.naming.ServiceUnavailableException;
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import java.util.*;
 
 @SpringBootApplication
 @RestController
 //@EnableDiscoveryClient
-@Slf4j
 public class DemoApplication {
-    Random random = new Random();
+
+
+    @Value("${spring.cloud.client.hostname}")
+    private String hostname;
 
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
     }
 
-    @GetMapping("/hello")
-    public String hello(@RequestParam(required = false) Integer time) {
-        log.info("Call api hello");
-        if (Objects.isNull(time)) {
-            time = 1000;
-        }
-        int timeout = random.nextInt(time);
-        try {
-            TimeUnit.MILLISECONDS.sleep(timeout);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if (timeout > 900) {
-            throw new RuntimeException("测试错误情况, timeout=" + timeout);
-        }
+    @PostConstruct
+    public void setup() {
+        System.out.println(hostname);
+    }
 
-        return "service processing time:" + timeout;
+    @GetMapping("/hello")
+    public String hello(@RequestParam(required = false) Integer time, @RequestParam(required = false) Integer size) {
+        Random random = new Random();
+        int timeout = random.nextInt(time);
+        if (Objects.nonNull(size)) {
+            byte[] bytes = new byte[size];
+        }
+        int a = 0;
+        for (int i = 0; i < timeout; i++) {
+            a += i;
+        }
+        return "service processing time:" + a;
+    }
+
+    @PostMapping("/hello")
+    public String getbody(@RequestBody Map <Object, Object> data) {
+        System.out.println("request body" + data);
+        return "request body data is :" + data;
     }
 
     @RequestMapping("/api/error")
     public String error() {
         throw new RuntimeException("异常测试情况");
-    }
-
-    @ControllerAdvice
-    class AppExceptionHandlerController extends ResponseEntityExceptionHandler {
-
-        @ExceptionHandler(value = Exception.class)
-        public ResponseEntity <Object> handleException(HttpServletRequest request, Exception e) {
-            return createResponseEntity(500, request.getRequestURI(), e.getMessage());
-        }
-
-        private ResponseEntity <Object> createResponseEntity(int httpStatus, String requestUri, String message) {
-            HashMap <Object, Object> errorMap = Maps.newHashMap();
-            errorMap.put("code", httpStatus);
-            errorMap.put("message", message);
-            errorMap.put("uri", requestUri);
-            errorMap.put("error", true);
-            String json = JsonUtils.object2Json(errorMap);
-
-            return ResponseEntity.status(HttpStatus.valueOf(httpStatus)).body(json);
-        }
-
     }
 
 
