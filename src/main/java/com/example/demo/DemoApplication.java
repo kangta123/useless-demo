@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +12,7 @@ import java.util.*;
 @SpringBootApplication
 @RestController
 //@EnableDiscoveryClient
+@Slf4j
 public class DemoApplication {
 
 
@@ -28,6 +30,8 @@ public class DemoApplication {
 
     @GetMapping("/hello")
     public String hello(@RequestParam(required = false) Integer time, @RequestParam(required = false) Integer size) {
+        log.info("中文乱码");
+        System.out.println("中文乱码");
         Random random = new Random();
         int timeout = random.nextInt(time);
         if (Objects.nonNull(size)) {
