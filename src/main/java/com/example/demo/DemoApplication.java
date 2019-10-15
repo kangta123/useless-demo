@@ -1,6 +1,8 @@
 package com.example.demo;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
@@ -10,8 +12,9 @@ import java.util.*;
 
 @SpringBootApplication
 @RestController
+@Slf4j
 //@EnableDiscoveryClient
-public class DemoApplication {
+public class DemoApplication implements CommandLineRunner {
 
 
     @Value("${spring.cloud.client.hostname}")
@@ -41,7 +44,7 @@ public class DemoApplication {
     }
 
     @PostMapping("/hello")
-    public String getbody(@RequestBody Map <Object, Object> data) {
+    public String getbody(@RequestBody Map<Object, Object> data) {
         System.out.println("request body" + data);
         return "request body data is :" + data;
     }
@@ -52,5 +55,10 @@ public class DemoApplication {
     }
 
 
+    @Override
+    public void run(String... args) throws Exception {
+        log.info("中文乱码");
+        System.out.println("中文乱码");
+    }
 }
 
