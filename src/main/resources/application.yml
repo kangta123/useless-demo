@@ -9,3 +9,4 @@ eureka:
     registry-fetch-interval-seconds: 5
 
 
+

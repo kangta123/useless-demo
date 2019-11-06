@@ -1,5 +1,9 @@
 package com.example.demo;
 
+import io.fabric8.kubernetes.client.AutoAdaptableKubernetesClient;
+import io.fabric8.kubernetes.client.Config;
+import io.fabric8.kubernetes.client.ConfigBuilder;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -25,7 +29,13 @@ public class DemoApplication {
 
     @PostConstruct
     public void setup() {
-        System.out.println(hostname);
+
+        Config config = new ConfigBuilder().build();
+        try (final KubernetesClient client = new AutoAdaptableKubernetesClient(config)) {
+            System.out.println("Pod size is " + client.pods().list().getItems().size());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @GetMapping("/hello")
@@ -45,7 +55,7 @@ public class DemoApplication {
     }
 
     @PostMapping("/hello")
-    public String getbody(@RequestBody Map <Object, Object> data) {
+    public String getbody(@RequestBody Map<Object, Object> data) {
         System.out.println("request body" + data);
         return "request body data is :" + data;
     }
