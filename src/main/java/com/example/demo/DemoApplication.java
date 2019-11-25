@@ -1,9 +1,7 @@
 package com.example.demo;
 
-import io.fabric8.kubernetes.client.AutoAdaptableKubernetesClient;
-import io.fabric8.kubernetes.client.Config;
-import io.fabric8.kubernetes.client.ConfigBuilder;
-import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.api.model.Config;
+import io.fabric8.kubernetes.api.model.ConfigBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -27,16 +25,6 @@ public class DemoApplication {
         SpringApplication.run(DemoApplication.class, args);
     }
 
-    @PostConstruct
-    public void setup() {
-
-        Config config = new ConfigBuilder().build();
-        try (final KubernetesClient client = new AutoAdaptableKubernetesClient(config)) {
-            System.out.println("Pod size is " + client.pods().list().getItems().size());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @GetMapping("/hello")
     public String hello(@RequestParam(required = false) Integer time, @RequestParam(required = false) Integer size) {

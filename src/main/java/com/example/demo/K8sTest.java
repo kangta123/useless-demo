@@ -1,32 +1,11 @@
 package com.example.demo;
 
-import io.fabric8.kubernetes.client.AutoAdaptableKubernetesClient;
-import io.fabric8.kubernetes.client.Config;
-import io.fabric8.kubernetes.client.ConfigBuilder;
-import io.fabric8.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.client.dsl.ExecWatch;
-
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class K8sTest {
     public static final String NAME = "ccccc";
     //    private static final String master = "https://localhost:6443";
-
-
-    private static KubernetesClient getClient() {
-        Config config = new ConfigBuilder()
-            .withOauthToken("qur4ih.hro86xc1u0qox3sy")
-            .withMasterUrl("https://47.94.59.17:6443")
-            .withNamespace("default")
-            .withDisableHostnameVerification(true)
-            .build();
-        return new AutoAdaptableKubernetesClient(config);
-    }
 
     public static void main(String[] args) {
 //       test();
@@ -49,6 +28,5 @@ public class K8sTest {
     }
 
     public static void test() {
-        System.out.println(getClient().namespaces().list());
     }
 }
