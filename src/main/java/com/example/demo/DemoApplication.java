@@ -14,7 +14,6 @@ import java.util.*;
 
 @SpringBootApplication
 @RestController
-@EnableDiscoveryClient
 @Slf4j
 public class DemoApplication {
 
