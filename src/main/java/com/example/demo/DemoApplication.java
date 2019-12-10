@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 @RestController
@@ -24,6 +25,13 @@ public class DemoApplication {
         SpringApplication.run(DemoApplication.class, args);
     }
 
+
+    @GetMapping("/sleep")
+    public String hello(@RequestParam Integer time) throws InterruptedException {
+        TimeUnit.SECONDS.sleep(time);
+
+        return "ok";
+    }
 
     @GetMapping("/hello")
     public String hello(@RequestParam(required = false) Integer time, @RequestParam(required = false) Integer size) {

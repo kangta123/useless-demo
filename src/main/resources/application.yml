@@ -1,6 +1,10 @@
 spring:
-  application:
-    name: demo
+    application:
+        name: demo
 
 
+server:
+    tomcat:
+        max-threads: 10
+        accept-count: 10
 
