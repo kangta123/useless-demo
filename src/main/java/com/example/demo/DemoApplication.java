@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 @SpringBootApplication
 @RestController
 @Slf4j
+@EnableDiscoveryClient
 public class DemoApplication {
 
     @Value("${spring.cloud.client.hostname}")
